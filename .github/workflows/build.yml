@@ -1,0 +1,63 @@
+name: Build & Release Android APK
+
+on:
+  push:
+    branches: [ "main", "master" ]
+    tags:
+      - "v*"
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build Debug APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Gradle 8.6
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.6'
+
+      - name: Build Debug APK with Gradle
+        run: gradle assembleDebug --stacktrace
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cosmic-ball-defense-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: app/build/outputs/apk/debug/*.apk
+          name: "Cosmic Ball Defense ${{ github.ref_name }}"
+          body: |
+            ### 太空彈球防衛戰 (Cosmic Ball Defense) 發布版本
+            - **版本標籤**: ${{ github.ref_name }}
+            - **建置產物**: `app-debug.apk` (可直接安裝於 Android 8.0+ / API 26+ 裝置)
+            - **更新內容**:
+              - 採用 Kotlin 原生 SurfaceView + Canvas 60~185Hz 自繪渲染引擎
+              - 8 排高張力蛇形怪物前進路線與急行軍機制
+              - 自由彈球物理、兩段式預測瞄準線、4 座雷射砲槽與追蹤飛彈
+              - 寶箱擊破技能三選一抽取、局外永久球傷害與幸運屬性養成
+              - 內建冰凍、全屏炸藥與雙倍傷害三大戰術道具
+          draft: false
+          prerelease: false

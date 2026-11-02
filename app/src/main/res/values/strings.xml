@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">太空彈球防衛戰</string>
+    <string name="start_game">開始遊戲</string>
+    <string name="upgrades">永久升級</string>
+    <string name="settings">系統設定</string>
+    <string name="about">關於與授權</string>
+    <string name="best_score">最佳分數: %1$s</string>
+    <string name="coins">金幣: %1$d</string>
+    <string name="revive_tickets">復活券: %1$d</string>
+    <string name="pause">暫停</string>
+    <string name="resume">繼續遊戲</string>
+    <string name="quit">退出至主選單</string>
+    <string name="game_over">防線失守</string>
+    <string name="revive_prompt">是否消耗 300 金幣或 1 張復活券復活？（剩餘 %1$d 次）</string>
+    <string name="revive_confirm">立即復活</string>
+    <string name="revive_give_up">放棄結算</string>
+</resources>
